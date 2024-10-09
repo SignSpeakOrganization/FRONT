@@ -12,7 +12,7 @@ var lastReload = false;
 
 chrome.runtime.onInstalled.addListener(function(details) {
   lastReload = Date.now();
-});    
+});
 
 connection.onerror = error => {
   console.log('reload connection got error:', error);

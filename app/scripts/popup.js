@@ -1,3 +1,3 @@
 'use strict';
 
-console.log('Popup focntionnel');
+console.log('Popup fonctionnel');
