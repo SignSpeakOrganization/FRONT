@@ -5,6 +5,7 @@
     "node": ">=0.8.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.25.9",
     "@babel/core": "^7.2.2",
     "@babel/polyfill": "7.2.5",
     "@babel/preset-env": "^7.2.3",
