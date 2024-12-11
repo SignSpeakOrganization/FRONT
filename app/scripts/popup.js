@@ -1,5 +1,8 @@
 'use strict';
 
+popupWindow = window.open('appPopup.html', 'PopupApp', 'width=300,height=200,left=100,top=100, z-index=1000');
+popupWindow.document.write('<p>Popup</p>');
+
 const toggleButton = document.getElementById('toggle');
 const activate = document.getElementById('activate');
 const desactivate = document.getElementById('desactivate');
