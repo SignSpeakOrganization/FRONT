@@ -23,5 +23,11 @@
     },
     "default_title": "SIGN SPEAK",
     "default_popup": "popup.html"
-  }
+  },
+  "web_accessible_resources": [
+    "images/icon-128.png",
+    "images/icon-19.png",
+    "images/icon-38.png"
+  ]
+  
 }
