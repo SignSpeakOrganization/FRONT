@@ -39,3 +39,17 @@ body {
   cursor: move;
   z-index: 1000;
 }
+.settings-icon {
+  position: absolute;
+  right: -50px; /* Ajuste l'espacement depuis le logo */
+  font-size: 24px;
+  color: #333;
+  text-decoration: none;
+  transition: transform 0.2s ease-in-out;
+}
+
+.settings-icon:hover {
+  transform: rotate(90deg);
+  color: #007bff;
+}
+
