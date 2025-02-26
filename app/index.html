@@ -7,11 +7,11 @@
 </head>
 <body>
 <center>
-  <div style="position: relative; display: flex; align-items: center; justify-content: center;">
-    <img src="images/icone-title.png" alt="Sign Speak" class="logo" style="height: 50px; width: 110px;">
+  <div class="header-container" style="position: relative; display: flex; align-items: center; justify-content: space-between;">
+    <img src="images/icone-title.png" alt="Sign Speak" class="logo">
 
     <!-- Icône engrenage menant aux options -->
-    <a href="options.html" class="settings-icon">
+    <a href="option.html" class="settings-icon">
       <i class="fas fa-cog"></i>
     </a>
   </div>
@@ -20,12 +20,12 @@
     <div class="row">
       <div class="col-md-12">
         <div class="form-group">
-          <label for="inputText">Cliquez sur le bouton "Activer" pour lancer SignSpeak</label>
+          <label for="inputText" style="font-weight: bold;">Cliquez sur le bouton "Activer" pour lancer SignSpeak</label>
         </div>
         <br>
         <div class="toggle-button" id="toggle">
-          <div id="activate" class="inactive">Activer</div>
-          <div id="desactivate" class="active">Désactiver</div>
+          <div id="desactivate" class="inactive">Activer</div>
+          <div id="activate" class="active">Désactiver</div>
         </div>
         <div id="popup">Déplacez-moi!</div>
       </div>

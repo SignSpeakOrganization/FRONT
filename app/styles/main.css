@@ -1,6 +1,9 @@
 body {
   font-family: Arial, sans-serif;
-  padding: 20px;
+  padding: 0px;
+  margin: 1;
+  height: 165px;
+  width: 186px;
 }
 
 .toggle-button {
@@ -39,17 +42,35 @@ body {
   cursor: move;
   z-index: 1000;
 }
+
+.logo {
+  width: 60%;
+}
+
 .settings-icon {
-  position: absolute;
-  right: -50px; /* Ajuste l'espacement depuis le logo */
-  font-size: 24px;
-  color: #333;
+  margin-left: 20px;
+  font-size: 20px;
+  color: transparent;
+  -webkit-text-stroke: 2px #3A6FA3; 
   text-decoration: none;
   transition: transform 0.2s ease-in-out;
 }
 
 .settings-icon:hover {
   transform: rotate(90deg);
-  color: #007bff;
 }
 
+.settings-icon:hover i {
+  -webkit-text-stroke: 0px; /* Supprime la bordure */
+  background: linear-gradient(180deg, #27C8DB 0%, #3A6FA3 50%, #543687 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+hr {
+  margin: 0;
+}
+
+.form-group {
+  margin: 11% 0 5% 0;
+}
