@@ -46,3 +46,8 @@ popup.addEventListener('mousedown', (e) => {
     document.addEventListener('mousemove', movePopup);
     document.addEventListener('mouseup', stopMovingPopup);
 });
+
+document.getElementById("open-options").addEventListener("click", (e) => {
+    e.preventDefault(); // évite le comportement par défaut du lien
+    chrome.tabs.create({ url: chrome.runtime.getURL("option/option.html") });
+  });

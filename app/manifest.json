@@ -11,8 +11,8 @@
   "background": {
     "service_worker": "scripts/background.js"
   },
-  "options_page": "option.html",
-  "permissions": ["scripting", "activeTab"],
+  "options_page": "option/option.html",
+  "permissions": ["scripting", "activeTab", "tabs", "windows"],
   "host_permissions": [],
   "action": {
     "default_icon": {
@@ -30,7 +30,9 @@
         "images/icon-38.png",
         "images/icone-title.png",
         "fonts/fontawesome/css/all.min.css",
-        "fonts/fontawesome/webfonts/*"
+        "fonts/fontawesome/webfonts/*",
+        "popup.html",
+        "option.html"
       ],
       "matches": ["<all_urls>"]
     }
