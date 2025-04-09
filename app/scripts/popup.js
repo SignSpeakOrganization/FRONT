@@ -1,32 +1,34 @@
 'use strict';
 
-
 const toggleButton = document.getElementById('toggle');
 const activate = document.getElementById('activate');
 const desactivate = document.getElementById('desactivate');
 const popup = document.getElementById('popup');
 
-let isActive = false;
+toggleButton.addEventListener('click', (event) => {
+  if (event.target === activate) {
+      // Activer devient "gradient", Désactiver devient "gris avec ombre intérieure"
+      activate.classList.add('gradient');
+      activate.classList.remove('inactive', 'active');
 
-toggleButton.addEventListener('click', () => {
-    isActive = !isActive;
-    console.log('Popup fonctionnel');
-    if (isActive) {
-        activate.classList.add('active');
-        activate.classList.remove('inactive');
-        desactivate.classList.add('inactive');
-        desactivate.classList.remove('active');
-        popup.style.display = 'block';
-    } else {
-        desactivate.classList.add('active');
-        desactivate.classList.remove('inactive');
-        activate.classList.add('inactive');
-        activate.classList.remove('active');
-        popup.style.display = 'none';
-    }
+      desactivate.classList.add('active');
+      desactivate.classList.remove('gradient', 'inactive');
+
+      popup.style.display = 'block';
+  } else if (event.target === desactivate) {
+      // Désactiver redevient actif, Activer retourne à l'état inactif
+      desactivate.classList.add('inactive');
+      desactivate.classList.remove('gradient', 'active');
+
+      activate.classList.add('active');
+      activate.classList.remove('gradient', 'inactive');
+
+      popup.style.display = 'none';
+  }
 });
 
-// Pour deplacer le popup
+
+// Permet de déplacer la pop-up
 popup.addEventListener('mousedown', (e) => {
     let offsetX = e.clientX - popup.offsetLeft;
     let offsetY = e.clientY - popup.offsetTop;
@@ -44,5 +46,3 @@ popup.addEventListener('mousedown', (e) => {
     document.addEventListener('mousemove', movePopup);
     document.addEventListener('mouseup', stopMovingPopup);
 });
-
-

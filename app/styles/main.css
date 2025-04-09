@@ -1,9 +1,12 @@
 body {
   font-family: Arial, sans-serif;
-  padding: 0px;
-  margin: 1;
+  padding: 6px;
+  margin: 0;
   height: 165px;
   width: 186px;
+  border: 3px solid;
+  border-image: linear-gradient(180deg, #27C8DB 0%, #3A6FA3 50%, #543687 100%);
+  border-image-slice: 1;
 }
 
 .toggle-button {
@@ -14,19 +17,34 @@ body {
   cursor: pointer;
 }
 
+/* Style par défaut pour les boutons */
 .toggle-button div {
   padding: 5px 15px;
   text-align: center;
   flex: 1;
+  transition: all 0.3s ease-in-out;
 }
 
+/* Désactiver = Fond gris avec ombre intérieure */
 .toggle-button .active {
   background-color: #ccc;
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.3);
 }
 
+/* Activer par défaut = Fond blanc */
 .toggle-button .inactive {
   background-color: white;
+  box-shadow: none;
 }
+
+/* Quand "Activer" est cliqué, appliquer les couleurs de .settings-icon:hover i */
+.toggle-button .gradient {
+  background: linear-gradient(180deg, #27C8DB 0%, #3A6FA3 50%, #543687 100%);
+  color: white; /* Pour fallback si background-clip ne fonctionne pas */
+  box-shadow: none;
+  font-weight: bold;
+}
+
 
 #popup {
   display: none;
