@@ -11,7 +11,7 @@
   "background": {
     "service_worker": "scripts/background.js"
   },
-  "options_page": "option.html",
+  "options_page": "option/option.html",
   "permissions": ["scripting", "activeTab", "tabs", "windows"],
   "host_permissions": [],
   "action": {
@@ -31,7 +31,8 @@
         "images/icone-title.png",
         "fonts/fontawesome/css/all.min.css",
         "fonts/fontawesome/webfonts/*",
-        "popup.html"
+        "popup.html",
+        "option.html"
       ],
       "matches": ["<all_urls>"]
     }

@@ -34,3 +34,8 @@ toggleButton.addEventListener('click', (event) => {
     // (ça nécessiterait stocker une référence à la fenêtre)
   }
 });
+
+document.getElementById("open-options").addEventListener("click", (e) => {
+    e.preventDefault(); // évite le comportement par défaut du lien
+    chrome.tabs.create({ url: chrome.runtime.getURL("option/option.html") });
+});
