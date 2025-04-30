@@ -11,9 +11,19 @@
   "background": {
     "service_worker": "scripts/background.js"
   },
-  "parameters_page": "parameters/menu.html",
-  "permissions": ["scripting", "activeTab", "tabs", "windows"],
-  "host_permissions": [],
+  "options_page": "parameters/option.html",
+  "permissions": [
+        "scripting", 
+        "tabs", 
+        "activeTab", 
+        "tabCapture", 
+        "storage",
+        "mediaDevices",
+        "windows"],
+  "host_permissions": [
+    "https://meet.google.com/*",
+    "https://teams.microsoft.com/*"
+  ],
   "action": {
     "default_icon": {
       "19": "images/icon-19.png",
@@ -32,8 +42,9 @@
         "fonts/fontawesome/css/all.min.css",
         "fonts/fontawesome/webfonts/*",
         "popup.html",
-        "option.html",
-        "menu.html"
+        "parameters/option.html",
+        "parameters/menu/menu.html,
+        "parameters/general/general.html
       ],
       "matches": ["<all_urls>"]
     }

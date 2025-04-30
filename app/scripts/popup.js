@@ -16,12 +16,16 @@ toggleButton.addEventListener('click', (event) => {
 
     // 🪟 Ouvre une nouvelle fenêtre popup externe
     chrome.windows.create({
-      url: chrome.runtime.getURL("popup.html"), // nom de ton fichier popup
+      url: chrome.runtime.getURL("../popup.html"),
       type: "popup",
-      width: 300,
-      height: 200
+      width: 250,
+      height: 200,
+      top: 100,
+      left: 100,
+      focused: true
+    }, (newWindow) => {
+      popupWindowId = newWindow.id;
     });
-
   } else if (event.target === desactivate) {
     // Désactiver redevient actif, Activer retourne à l'état inactif
     desactivate.classList.add('inactive');
@@ -29,13 +33,7 @@ toggleButton.addEventListener('click', (event) => {
 
     activate.classList.add('active');
     activate.classList.remove('gradient', 'inactive');
-
-    // Rien à faire ici pour fermer la fenêtre externe automatiquement
-    // (ça nécessiterait stocker une référence à la fenêtre)
   }
 });
 
-document.getElementById("open-options").addEventListener("click", (e) => {
-    e.preventDefault(); // évite le comportement par défaut du lien
-    chrome.tabs.create({ url: chrome.runtime.getURL("option/option.html") });
-});
+ 

@@ -1,23 +1,21 @@
 'use strict';
 
+const popup = document.getElementById('popup');
+
 let isDragging = false;
 let offsetX = 0;
 let offsetY = 0;
 
-document.body.addEventListener('mousedown', (e) => {
+popup.addEventListener('mousedown', (e) => {
   isDragging = true;
-  offsetX = e.clientX;
-  offsetY = e.clientY;
+  offsetX = e.clientX - popup.offsetLeft;
+  offsetY = e.clientY - popup.offsetTop;
 });
 
 document.addEventListener('mousemove', (e) => {
   if (isDragging) {
-    chrome.windows.getCurrent({}, function(win) {
-      chrome.windows.update(win.id, {
-        left: e.screenX - offsetX,
-        top: e.screenY - offsetY
-      });
-    });
+    popup.style.left = `${e.clientX - offsetX}px`;
+    popup.style.top = `${e.clientY - offsetY}px`;
   }
 });
 
