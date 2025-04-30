@@ -1,0 +1,54 @@
+{
+  "name": "__MSG_appName__",
+  "version": "0.0.1",
+  "manifest_version": 3,
+  "description": "__MSG_appDescription__",
+  "default_locale": "en",
+  "icons": {
+    "16": "images/icon-128.png",
+    "128": "images/icon-128.png"
+  },
+  "background": {
+    "service_worker": "scripts/background.js"
+  },
+  "options_page": "parameters/option.html",
+  "permissions": [
+        "scripting", 
+        "tabs", 
+        "activeTab", 
+        "tabCapture", 
+        "storage",
+        "mediaDevices",
+        "windows"],
+  "host_permissions": [
+    "https://meet.google.com/*",
+    "https://teams.microsoft.com/*"
+  ],
+  "action": {
+    "default_icon": {
+      "19": "images/icon-19.png",
+      "38": "images/icon-38.png"
+    },
+    "default_title": "SIGN SPEAK",
+    "default_popup": "index.html"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "images/icon-128.png",
+        "images/icon-19.png",
+        "images/icon-38.png",
+        "images/icone-title.png",
+        "fonts/fontawesome/css/all.min.css",
+        "fonts/fontawesome/webfonts/*",
+        "popup.html",
+        "parameters/option.html",
+        "parameters/menu/menu.html",
+        "parameters/general/general.html"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
+
+
