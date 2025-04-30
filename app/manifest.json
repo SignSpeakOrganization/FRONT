@@ -32,7 +32,7 @@
         "fonts/fontawesome/css/all.min.css",
         "fonts/fontawesome/webfonts/*",
         "popup.html",
-        "option.html"
+        "option/option.html"
       ],
       "matches": ["<all_urls>"]
     }

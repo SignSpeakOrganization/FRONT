@@ -16,13 +16,15 @@ toggleButton.addEventListener('click', (event) => {
 
     // 🪟 Ouvre une nouvelle fenêtre popup externe
     chrome.windows.create({
-      url: chrome.runtime.getURL("popup.html"),
+      url: chrome.runtime.getURL("../popup.html"),
       type: "popup",
       width: 250,
       height: 200,
       top: 100,
       left: 100,
       focused: true
+    }, (newWindow) => {
+      popupWindowId = newWindow.id;
     });
   } else if (event.target === desactivate) {
     // Désactiver redevient actif, Activer retourne à l'état inactif
@@ -32,5 +34,4 @@ toggleButton.addEventListener('click', (event) => {
     activate.classList.add('active');
     activate.classList.remove('gradient', 'inactive');
   }
-  
 });

@@ -1,21 +1,21 @@
 'use strict';
 
+const popup = document.getElementById('popup');
+
 let isDragging = false;
-let startX = 0;
-let startY = 0;
-let initialLeft = 0;
-let initialTop = 0;
-let currentWindowId = null;
+let offsetX = 0;
+let offsetY = 0;
+
+popup.addEventListener('mousedown', (e) => {
+  isDragging = true;
+  offsetX = e.clientX - popup.offsetLeft;
+  offsetY = e.clientY - popup.offsetTop;
+});
 
 document.addEventListener('mousemove', (e) => {
-  if (isDragging && currentWindowId !== null) {
-    const dx = e.screenX - startX;
-    const dy = e.screenY - startY;
-
-    chrome.windows.update(currentWindowId, {
-      left: initialLeft + dx,
-      top: initialTop + dy
-    });
+  if (isDragging) {
+    popup.style.left = `${e.clientX - offsetX}px`;
+    popup.style.top = `${e.clientY - offsetY}px`;
   }
 });
 
