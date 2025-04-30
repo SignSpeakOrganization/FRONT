@@ -33,6 +33,5 @@ chrome.action.onClicked.addListener((tab) => {
       console.log("Flux capturé :", stream);
       alert("Flux capturé !");
 
-      // Tu peux maintenant afficher la vidéo dans une fenêtre ou l'utiliser pour du traitement
   });
 });
