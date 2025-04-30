@@ -1,23 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Popup App</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f9f9f9;
-        }
-        h1 {
-            font-size: 18px;
-            color: #333;
-        }
-    </style>
+    <title>Capture Vidéo</title>
+    <script src="scripts/popup.js" defer></script>
 </head>
 <body>
-    <h1>Déplacez-moi!</h1>
+    <h2>Capture Vidéo</h2>
+    <button id="startCapture">Démarrer Capture</button>
+    <video id="videoElement" autoplay playsinline></video>
 </body>
 </html>
