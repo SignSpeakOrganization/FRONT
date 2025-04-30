@@ -43,8 +43,8 @@
         "fonts/fontawesome/webfonts/*",
         "popup.html",
         "parameters/option.html",
-        "parameters/menu/menu.html,
-        "parameters/general/general.html
+        "parameters/menu/menu.html",
+        "parameters/general/general.html"
       ],
       "matches": ["<all_urls>"]
     }
