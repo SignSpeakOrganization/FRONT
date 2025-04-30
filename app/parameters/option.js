@@ -21,4 +21,10 @@ document.addEventListener("DOMContentLoaded", () => {
         alert("Options sauvegardées !");
       });
     });
+
+    handleclick = (e) => {
+        e.preventDefault();
+        chrome.tabs.create({ url: chrome.runtime.getURL("option/option.html") });
+      }
+    document.getElementById("open-options").addEventListener("click", handleclick);
   });
