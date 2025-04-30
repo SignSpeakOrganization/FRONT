@@ -1,22 +1,20 @@
 'use strict';
 
 let isDragging = false;
-let offsetX = 0;
-let offsetY = 0;
-
-document.body.addEventListener('mousedown', (e) => {
-  isDragging = true;
-  offsetX = e.clientX;
-  offsetY = e.clientY;
-});
+let startX = 0;
+let startY = 0;
+let initialLeft = 0;
+let initialTop = 0;
+let currentWindowId = null;
 
 document.addEventListener('mousemove', (e) => {
-  if (isDragging) {
-    chrome.windows.getCurrent({}, function(win) {
-      chrome.windows.update(win.id, {
-        left: e.screenX - offsetX,
-        top: e.screenY - offsetY
-      });
+  if (isDragging && currentWindowId !== null) {
+    const dx = e.screenX - startX;
+    const dy = e.screenY - startY;
+
+    chrome.windows.update(currentWindowId, {
+      left: initialLeft + dx,
+      top: initialTop + dy
     });
   }
 });
