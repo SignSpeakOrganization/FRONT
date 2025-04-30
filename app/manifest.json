@@ -11,7 +11,7 @@
   "background": {
     "service_worker": "scripts/background.js"
   },
-  "options_page": "option/option.html",
+  "options_page": "parameters/option.html",
   "permissions": [
         "scripting", 
         "tabs", 
@@ -42,7 +42,9 @@
         "fonts/fontawesome/css/all.min.css",
         "fonts/fontawesome/webfonts/*",
         "popup.html",
-        "option/option.html"
+        "parameters/option.html",
+        "parameters/menu/menu.html",
+        "parameters/general/general.html"
       ],
       "matches": ["<all_urls>"]
     }

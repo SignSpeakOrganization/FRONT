@@ -18,7 +18,20 @@ toggleButton.addEventListener('click', (event) => {
     desactivate.classList.add('active');
     desactivate.classList.remove('gradient', 'inactive');
 
+
     // Ouvre la popup
+    fetch('http://localhost:5000/start', {
+      method: 'GET'
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Réponse du backend:', data.message);
+      })
+      .catch(error => {
+        console.error('Erreur :', error);
+      });
+
+    // 🪟 Ouvre une nouvelle fenêtre popup externe
     chrome.windows.create({
       url: chrome.runtime.getURL("popup.html"),
       type: "popup",
@@ -39,6 +52,7 @@ toggleButton.addEventListener('click', (event) => {
     activate.classList.add('active');
     activate.classList.remove('gradient', 'inactive');
 
+
     // Ferme la popup si elle est ouverte
     if (popupWindowId !== null) {
       chrome.windows.remove(popupWindowId, () => {
@@ -46,5 +60,16 @@ toggleButton.addEventListener('click', (event) => {
         opening = false; // autorise une nouvelle ouverture
       });
     }
+
+    fetch('http://localhost:5000/end', {
+      method: 'GET'
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Réponse du backend:', data.message);
+      })
+      .catch(error => {
+        console.error('Erreur :', error);
+      });
   }
 });

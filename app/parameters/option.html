@@ -11,14 +11,14 @@
     <div class="container">
 
       <aside class="sidebar">
-        <h2>Sign Speak</h2>
+        <img src="./../images/icone-title.png" alt="Sign Speak" class="logo">
         <nav>
-          <ul>
-            <li class="active">Général</li>
-            <li>Retranscription et traduction</li>
-            <li>Accessibilité</li>
-            <li>Compatibilité et intégration</li>
-            <li>Contactez-nous</li>
+          <ul id = "links" >
+            <li (click)="handleClick()" >Général</li>
+            <li (click)="handleClick()" >Retranscription et traduction</li>
+            <li (click)="handleClick()" >Accessibilité</li>
+            <li (click)="handleClick()" >Compatibilité et intégration</li>
+            <li (click)="handleClick()" >Contactez-nous</li>
           </ul>
         </nav>
       </aside>
