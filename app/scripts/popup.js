@@ -4,16 +4,22 @@ const toggleButton = document.getElementById('toggle');
 const activate = document.getElementById('activate');
 const desactivate = document.getElementById('desactivate');
 
-// Remplace l'affichage du div#popup par l'ouverture de la popup externe
+let popupWindowId = null;
+let opening = false; // Empêche plusieurs ouvertures
+
 toggleButton.addEventListener('click', (event) => {
   if (event.target === activate) {
-    // Activer devient "gradient", Désactiver devient "gris avec ombre intérieure"
+    // Empêche l'ouverture multiple
+    if (opening) return;
+
+    // Style bouton
     activate.classList.add('gradient');
     activate.classList.remove('inactive', 'active');
-
     desactivate.classList.add('active');
     desactivate.classList.remove('gradient', 'inactive');
 
+
+    // Ouvre la popup
     fetch('http://localhost:5000/start', {
       method: 'GET'
     })
@@ -27,23 +33,33 @@ toggleButton.addEventListener('click', (event) => {
 
     // 🪟 Ouvre une nouvelle fenêtre popup externe
     chrome.windows.create({
-      url: chrome.runtime.getURL("../popup.html"),
+      url: chrome.runtime.getURL("popup.html"),
       type: "popup",
-      width: 250,
-      height: 200,
+      width: 300,
+      height: 250,
       top: 100,
       left: 100,
       focused: true
     }, (newWindow) => {
       popupWindowId = newWindow.id;
+      opening = true;
     });
+
   } else if (event.target === desactivate) {
-    // Désactiver redevient actif, Activer retourne à l'état inactif
+    // Style bouton
     desactivate.classList.add('inactive');
     desactivate.classList.remove('gradient', 'active');
-
     activate.classList.add('active');
     activate.classList.remove('gradient', 'inactive');
+
+
+    // Ferme la popup si elle est ouverte
+    if (popupWindowId !== null) {
+      chrome.windows.remove(popupWindowId, () => {
+        popupWindowId = null;
+        opening = false; // autorise une nouvelle ouverture
+      });
+    }
 
     fetch('http://localhost:5000/end', {
       method: 'GET'
@@ -57,5 +73,3 @@ toggleButton.addEventListener('click', (event) => {
       });
   }
 });
-
- 

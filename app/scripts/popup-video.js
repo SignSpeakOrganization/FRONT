@@ -1,32 +1,70 @@
 'use strict';
 
 document.addEventListener("DOMContentLoaded", () => {
-    const startCaptureButton = document.getElementById("startCapture");
-    const videoElement = document.getElementById("videoElement");
+  const startCaptureButton = document.getElementById("startCapture");
+  const videoElement = document.getElementById("videoElement");
 
-    if (startCaptureButton) {
-        startCaptureButton.addEventListener("click", async () => {
-            try {
-                console.log("Demande d'accès à la caméra et au micro...");
-                
-                // Demander l'accès au micro et à la caméra
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+  let stream = null;
+  let initialWidth = null;
+  let initialHeight = null;
 
-                // Afficher la vidéo dans l'élément <video>
-                videoElement.srcObject = stream;
-                console.log("Accès accordé : Flux vidéo et audio récupéré !");
-            } catch (error) {
-                console.error("Erreur lors de l'accès à la caméra/micro :", error);
+  // Sauvegarde la taille de la fenêtre à l'ouverture
+  chrome.windows.getCurrent({}, (win) => {
+    initialWidth = win.width;
+    initialHeight = win.height;
+  });
 
-                // Vérifie si l'utilisateur a refusé l'accès
-                if (error.name === "NotAllowedError") {
-                    alert("⚠️ Accès refusé ! Veuillez autoriser l'accès à la caméra et au micro dans les paramètres de Chrome.");
-                } else if (error.name === "NotFoundError") {
-                    alert("⚠️ Aucune caméra ou micro détecté !");
-                } else {
-                    alert("❌ Une erreur inconnue s'est produite !");
-                }
-            }
-        });
-    }
+  if (startCaptureButton) {
+    startCaptureButton.addEventListener("click", async () => {
+      // Si une capture est active, on la stoppe
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        videoElement.srcObject = null;
+        stream = null;
+
+        // Restauration de la taille d'origine
+        if (initialWidth && initialHeight) {
+          chrome.windows.getCurrent({}, (win) => {
+            chrome.windows.update(win.id, {
+              width: initialWidth,
+              height: initialHeight
+            });
+          });
+        }
+
+        // Réinitialise le bouton
+        startCaptureButton.textContent = "Démarrer Capture";
+        startCaptureButton.classList.remove("gradient");
+        return;
+      }
+
+      // Démarrer la capture
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        videoElement.srcObject = stream;
+
+        // 6. Mise à jour du bouton
+        startCaptureButton.textContent = "Fermer la capture";
+        startCaptureButton.classList.add("gradient");
+
+        // Redimensionner la popup à la taille de la vidéo
+        videoElement.onloadedmetadata = () => {
+          const videoWidth = videoElement.videoWidth;
+          const videoHeight = videoElement.videoHeight;
+          const extraHeight = 100;
+
+            chrome.windows.getCurrent({}, (win) => {
+              chrome.windows.update(win.id, {
+                width: videoWidth,
+                height: videoHeight + extraHeight
+              });
+            });
+          };
+      } catch (error) {
+        console.error("Erreur d'accès caméra/micro :", error);
+        alert("Erreur : " + error.message);
+        stream = null;
+      }
+    });
+  }
 });
