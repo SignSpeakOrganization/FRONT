@@ -12,8 +12,18 @@
     "service_worker": "scripts/background.js"
   },
   "options_page": "option/option.html",
-  "permissions": ["scripting", "activeTab", "tabs", "windows"],
-  "host_permissions": [],
+  "permissions": [
+        "scripting", 
+        "tabs", 
+        "activeTab", 
+        "tabCapture", 
+        "storage",
+        "mediaDevices",
+        "windows"],
+  "host_permissions": [
+    "https://meet.google.com/*",
+    "https://teams.microsoft.com/*"
+  ],
   "action": {
     "default_icon": {
       "19": "images/icon-19.png",
