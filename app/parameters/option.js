@@ -28,3 +28,29 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     document.getElementById("open-options").addEventListener("click", handleclick);
   });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    fetch("menu/menu.html")
+      .then(res => {
+        console.log("Status de la requête :", res.status);
+        return res.text();
+      })
+      .then(html => {
+        document.getElementById("menu-container").innerHTML = html;
+        console.log("Menu chargé !");
+      })
+      .catch(err => console.error("Erreur de chargement du menu :", err));
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    fetch("general/general.html")
+      .then(res => {
+        console.log("Status de la requête :", res.status);
+        return res.text();
+      })
+      .then(html => {
+        document.getElementById("content-container").innerHTML = html;
+        console.log("Menu chargé !");
+      })
+      .catch(err => console.error("Erreur de chargement du menu :", err));
+  });
