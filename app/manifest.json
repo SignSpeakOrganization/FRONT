@@ -46,7 +46,8 @@
         "parameters/menu/menu.html",
         "parameters/general/general.html"
       ],
-      "matches": ["<all_urls>"]
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
     }
   ]
 }
