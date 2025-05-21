@@ -32,9 +32,5 @@ chrome.action.onClicked.addListener((tab) => {
 
       console.log("Flux capturé :", stream);
       alert("Flux capturé !");
-<<<<<<< HEAD
-
-=======
->>>>>>> 6e99cf5ce006a7312f85b593773da3bb17f19921
   });
 });
