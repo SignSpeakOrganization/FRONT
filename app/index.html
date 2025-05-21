@@ -1,10 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
   <meta charset="utf-8">
+  <title>Sign Speak</title>
   <link href="styles/main.css" rel="stylesheet">
   <link href="fonts/fontawesome/css/all.min.css" rel="stylesheet">
-  <script src="index.js" defer></script>
+
+  <!-- Chargement des scripts en tant que modules ES6 -->
+  <script type="module" src="scripts/popup.js"></script>
+  <script type="module" src="scripts/popup-video.js"></script>
+  <script type="module" src="scripts/popup-move.js"></script>
+  <script type="module" src="scripts/content.js"></script>
+  <script type="module" src="scripts/chromereload.js"></script>
 </head>
 <body>
 
@@ -15,22 +22,27 @@
       <i class="fas fa-cog"></i>
     </a>
   </div>
+
   <hr>
+
   <div class="container">
     <div class="row">
       <div class="col-md-12">
         <div class="form-group">
-          <label for="inputText" style="font-weight: bold;">Cliquez sur le bouton "Activer" pour lancer SignSpeak</label>
+          <label for="inputText" style="font-weight: bold;">
+            Cliquez sur le bouton "Activer" pour lancer SignSpeak
+          </label>
         </div>
         <br>
-        <div class="toggle-button" id="toggle">
-          <div id="activate" class="inactive">Activer</div>
-          <div id="desactivate" class="active">Désactiver</div>
+        <div class="toggle-wrapper">
+          <div class="toggle-button" id="toggle">
+            <div id="activate" class="inactive">Activer</div>
+            <div id="desactivate" class="active">Désactiver</div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <script src="scripts/popup.js"></script>
 
 </body>
 </html>

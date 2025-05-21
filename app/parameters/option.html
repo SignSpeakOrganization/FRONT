@@ -5,43 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Options - Sign Speak</title>
     <link rel="stylesheet" href="./option.css">
-    <script src="options.js" defer></script>
+    <script src="option.js" defer></script>
   </head>
   <body>
+
     <div class="container">
-
-      <aside class="sidebar">
-        <img src="./../images/icone-title.png" alt="Sign Speak" class="logo">
-        <nav>
-          <ul id = "links" >
-            <li (click)="handleClick()" >Général</li>
-            <li (click)="handleClick()" >Retranscription et traduction</li>
-            <li (click)="handleClick()" >Accessibilité</li>
-            <li (click)="handleClick()" >Compatibilité et intégration</li>
-            <li (click)="handleClick()" >Contactez-nous</li>
-          </ul>
-        </nav>
-      </aside>
-
-      <main class="content">
-        <h1>Général</h1>
-
-        <section class="section">
-          <h2>Langue</h2>
-          <select id="language-select">
-            <option value="fr">Français</option>
-          </select>
-        </section>
-
-        <section class="section">
-          <h2>Extension</h2>
-          <label>
-            <input type="checkbox" id="enable-sign-detection">
-            Activer l'extension
-          </label>
-        </section>
-
-      </main>
+      <div id="menu-container"></div>
+      <div id="content-container"></div>
     </div>
+
   </body>
 </html>
