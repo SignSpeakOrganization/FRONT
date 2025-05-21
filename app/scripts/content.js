@@ -2,10 +2,6 @@
 
 /**
  * Récupère les périphériques vidéo disponibles (caméras).
- * @async
- * @function
- * @returns {Promise<MediaDeviceInfo[]>} Une promesse contenant la liste des périphériques de type "videoinput".
- * @throws {Error} Si la récupération échoue.
  */
 async function getVideoInputDevices() {
   try {
@@ -19,9 +15,6 @@ async function getVideoInputDevices() {
 /**
  * Vérifie la disponibilité des caméras et affiche une alerte
  * listant les caméras ou un message d'erreur.
- * @async
- * @function
- * @returns {Promise<void>}
  */
 async function checkAndAlertAvailableCameras() {
   try {
@@ -38,15 +31,14 @@ async function checkAndAlertAvailableCameras() {
   }
 }
 
-/**
- * Lance automatiquement la vérification des caméras
- * dès l'exécution du script.
- * @async
- * @function
- * @returns {Promise<void>}
- */
+// Démarre la vérification des caméras automatiquement
 (async () => {
   await checkAndAlertAvailableCameras();
 })();
 
-export { getVideoInputDevices, checkAndAlertAvailableCameras };
+// Écouteur pour les messages reçus depuis background.js
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === 'STREAM_CAPTURED') {
+    alert("Flux capturé !");
+  }
+});
