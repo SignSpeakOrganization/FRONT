@@ -2,16 +2,26 @@
  * @jest-environment jsdom
  */
 
+// ⛔ IMPORTANT : config avant import du script testé
+global.window = global.window || {};
+window.__TEST__ = true;
+global.__JEST__ = true;
+global.alert = jest.fn();
+global.console = { log: jest.fn(), error: jest.fn() };
+
+// 👉 Mock initial de mediaDevices pour bloquer l'exécution automatique à l'import
+global.navigator.mediaDevices = {
+  enumerateDevices: jest.fn()
+};
+
 import {
   getVideoInputDevices,
   checkAndAlertAvailableCameras
-} from '../scripts/content'; 
+} from '../scripts/content';
 
 describe('getVideoInputDevices', () => {
   beforeEach(() => {
-    global.navigator.mediaDevices = {
-      enumerateDevices: jest.fn()
-    };
+    navigator.mediaDevices.enumerateDevices = jest.fn(); // Réinitialisation
   });
 
   it('should return only devices of kind "videoinput"', async () => {
@@ -43,12 +53,8 @@ describe('getVideoInputDevices', () => {
 
 describe('checkAndAlertAvailableCameras', () => {
   beforeEach(() => {
-    global.console.log = jest.fn();
-    global.console.error = jest.fn();
     global.alert = jest.fn();
-    global.navigator.mediaDevices = {
-      enumerateDevices: jest.fn()
-    };
+    navigator.mediaDevices.enumerateDevices = jest.fn();
   });
 
   it('should log camera list when at least one is found', async () => {

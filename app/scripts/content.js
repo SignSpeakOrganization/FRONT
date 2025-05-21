@@ -32,13 +32,19 @@ async function checkAndAlertAvailableCameras() {
 }
 
 // Démarre la vérification des caméras automatiquement
-(async () => {
-  await checkAndAlertAvailableCameras();
-})();
+if (typeof window !== 'undefined' && !(window.__JEST__ || global.__JEST__)) {
+  (async () => {
+    await checkAndAlertAvailableCameras();
+  })();
+}
 
-// Écouteur pour les messages reçus depuis background.js
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.type === 'STREAM_CAPTURED') {
-    alert("Flux capturé !");
-  }
-});
+
+// // Écouteur pour les messages reçus depuis background.js
+// chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+//   if (message.type === 'STREAM_CAPTURED') {
+//     alert("Flux capturé !");
+//   }
+// });
+
+export { getVideoInputDevices, checkAndAlertAvailableCameras };
+
