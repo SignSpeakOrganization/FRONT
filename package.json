@@ -64,8 +64,8 @@
   "description": "Sign-Speak est une extension web destinée à faciliter l'accessibilité en interprétant la langue des signes en texte et en traduisant l'audio en gestes (LSF) pour les personnes malentendantes. Ce projet est actuellement en cours de développement avec pour objectif de permettre la communication en temps réel dans les deux sens : \r Gestes → Texte et Audio → Gestes.",
   "main": "gulpfile.babel.js",
   "scripts": {
-    "test": "jest",
-    "docs": "jsdoc -c jsdoc.json"
+    "test": "jest --silent=false --coverage",
+    "jsdoc": "jsdoc -R ./README.md -c ./jsdoc.config.json -r -d ./public/docs"
   },
   "jest": {
     "testEnvironment": "jest-environment-jsdom"
