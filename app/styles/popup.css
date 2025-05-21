@@ -4,16 +4,30 @@ body {
 }
 
 .draggable {
-  width: 200px;
-  padding: 10px;
-  background-color: #f0f0f0;
-  border: 2px solid #333;
-  border-radius: 8px;
-  cursor: move;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
   position: absolute;
-  top: 50px;
+  top: 45px;
   left: 50px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  padding: 4px; /* épaisseur de la bordure */
+  background: 
+    linear-gradient(white, white) padding-box,       /* fond uni intérieur */
+    linear-gradient(135deg, #4b6cb7, #182848) border-box; /* dégradé bordure */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 4px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: move;
+  box-sizing: border-box;
+}
+
+.draggable h1 {
+  font-size: 16px;
+  margin: 0;
+  padding: 10px;
 }
 
 h1 {
