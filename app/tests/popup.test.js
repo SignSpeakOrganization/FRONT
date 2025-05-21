@@ -54,7 +54,7 @@ describe('updateButtonStylesOnDeactivate', () => {
 });
 
 describe('openPopupWindow', () => {
-  it('doit ouvrir une fenêtre popup avec les bons paramètres et appeler le callback', () => {
+  it('should open the popup window and call the callback', () => {
     const callback = jest.fn();
 
     popup.openPopupWindow(callback);
@@ -77,11 +77,11 @@ describe('openPopupWindow', () => {
 });
 
 describe('closePopupWindow', () => {
-  it('doit fermer la fenêtre popup si elle est ouverte et appeler le callback', () => {
+  it('should close the popup window if it is open and call the callback', () => {
     const callback = jest.fn();
 
     // Simule une fenêtre ouverte
-    popup.popupWindowId = 456;     // Cette ligne ne marchera pas directement car popupWindowId n'est pas exportée
+    popup.popupWindowId = 456;     
 
     let popupWindowIdRef = { value: 456 };
     let openingRef = { value: true };
@@ -102,7 +102,7 @@ describe('closePopupWindow', () => {
     expect(callback).toHaveBeenCalled();
   });
 
-  it('ne doit rien faire si aucune fenêtre n’est ouverte', () => {
+  it('should do nothing if no window is open', () => {
     const callback = jest.fn();
 
     popup.closePopupWindow(callback); // popupWindowId est null par défaut
@@ -112,7 +112,7 @@ describe('closePopupWindow', () => {
 });
 
 describe('callBackendStart', () => {
-  it('devrait appeler fetch sur /start et afficher la réponse', async () => {
+  it('should call fetch on /start and display the response', async () => {
     const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
 
     global.fetch = jest.fn(() =>
@@ -129,7 +129,7 @@ describe('callBackendStart', () => {
     logSpy.mockRestore();
   });
 
-  it('devrait capturer et afficher une erreur si fetch échoue', async () => {
+  it('should catch and display an error if fetch fails', async () => {
     const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     global.fetch = jest.fn(() => Promise.reject(new Error('Échec de connexion')));
 
@@ -142,7 +142,7 @@ describe('callBackendStart', () => {
 });
 
 describe('callBackendEnd', () => {
-  it('devrait appeler fetch sur /end et afficher la réponse', async () => {
+  it('should call fetch on /end and display the response', async () => {
     const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
 
     global.fetch = jest.fn(() =>
@@ -159,7 +159,7 @@ describe('callBackendEnd', () => {
     logSpy.mockRestore();
   });
 
-  it('devrait capturer et afficher une erreur si fetch échoue', async () => {
+  it('should catch and display an error if fetch fails', async () => {
     const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     global.fetch = jest.fn(() => Promise.reject(new Error('Erreur réseau')));
 
@@ -173,10 +173,10 @@ describe('callBackendEnd', () => {
 
 describe('handleToggleClick', () => {
   beforeEach(() => {
-    popup.opening = false; // reset l'état entre chaque test
+    popup.opening = false; 
   });
 
-  it('devrait activer si le bouton "activate" est cliqué', () => {
+  it('should activate if the "activate" button is clicked', () => {
     const activate = document.getElementById('activate');
     const updateSpy = jest.spyOn(popup, 'updateButtonStylesOnActivate').mockImplementation(() => {});
     const startSpy = jest.spyOn(popup, 'callBackendStart').mockImplementation(() => {});
@@ -189,7 +189,7 @@ describe('handleToggleClick', () => {
     openSpy.mockRestore();
   });
 
-  it('ne doit rien faire si ouverture déjà en cours', () => {
+  it('should initialize the elements and attach the click handler', () => {
     const activate = document.getElementById('activate');
     popup.opening = true;
 
@@ -204,7 +204,7 @@ describe('handleToggleClick', () => {
     openSpy.mockRestore();
   });
 
-  it('devrait désactiver si le bouton "desactivate" est cliqué', () => {
+  it('should desactivate if the "activate" button is clicked', () => {
     const desactivate = document.getElementById('desactivate');
     const updateSpy = jest.spyOn(popup, 'updateButtonStylesOnDeactivate').mockImplementation(() => {});
     const closeSpy = jest.spyOn(popup, 'closePopupWindow').mockImplementation(() => {});
@@ -219,7 +219,7 @@ describe('handleToggleClick', () => {
 });
 
 describe('initPopupEvents', () => {
-  it('devrait initialiser les éléments et attacher le gestionnaire de clic', () => {
+  it('should initialize the elements and attach the click handler', () => {
     const toggle = document.getElementById('toggle');
     const addEventListenerSpy = jest.spyOn(toggle, 'addEventListener');
 
@@ -232,7 +232,7 @@ describe('initPopupEvents', () => {
     addEventListenerSpy.mockRestore();
   });
 
-  it('ne plante pas si #toggle est manquant', () => {
+  it('does not crash if #toggle is missing', () => {
     document.getElementById('toggle').remove(); // Simule l'absence de toggle
     expect(() => popup.initPopupEvents()).not.toThrow();
   });

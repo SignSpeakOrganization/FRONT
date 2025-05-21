@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: popup.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: popup.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+
+let popupWindowId = null;
+let opening = false;
+
+/**
+ * Applique les styles CSS d'activation sur les boutons.
+ * @function
+ * @returns {void}
+ */
+function updateButtonStylesOnActivate() {
+  activate.classList.add('gradient');
+  activate.classList.remove('inactive', 'active');
+  desactivate.classList.add('active');
+  desactivate.classList.remove('gradient', 'inactive');
+}
+
+/**
+ * Applique les styles CSS de désactivation sur les boutons.
+ * @function
+ * @returns {void}
+ */
+function updateButtonStylesOnDeactivate() {
+  desactivate.classList.add('inactive');
+  desactivate.classList.remove('gradient', 'active');
+  activate.classList.add('active');
+  activate.classList.remove('gradient', 'inactive');
+}
+
+/**
+ * Ouvre une nouvelle fenêtre popup de l’extension.
+ * @function
+ * @param {Function} [callback] - Fonction appelée après l’ouverture.
+ * @returns {void}
+ */
+function openPopupWindow(callback) {
+  chrome.windows.create({
+    url: chrome.runtime.getURL("popup.html"),
+    type: "popup",
+    width: 300,
+    height: 250,
+    top: 100,
+    left: 100,
+    focused: true
+  }, (newWindow) => {
+    popupWindowId = newWindow.id;
+    opening = true;
+    if (callback) callback();
+  });
+}
+
+/**
+ * Ferme la fenêtre popup ouverte, si elle existe.
+ * @function
+ * @param {Function} [callback] - Fonction appelée après la fermeture.
+ * @returns {void}
+ */
+function closePopupWindow(callback) {
+  if (popupWindowId !== null) {
+    chrome.windows.remove(popupWindowId, () => {
+      popupWindowId = null;
+      opening = false;
+      if (callback) callback();
+    });
+  }
+}
+
+/**
+ * Effectue un appel HTTP pour démarrer le backend (serveur Python).
+ * @function
+ * @returns {Promise&lt;void>}
+ */
+function callBackendStart() {
+  return fetch('http://localhost:5000/start', { method: 'GET' })
+    .then(res => res.json())
+    .then(data => console.log('Réponse du backend:', data.message))
+    .catch(err => console.error('Erreur :', err));
+}
+
+/**
+ * Effectue un appel HTTP pour arrêter le backend.
+ * @function
+ * @returns {Promise&lt;void>}
+ */
+function callBackendEnd() {
+  return fetch('http://localhost:5000/end', { method: 'GET' })
+    .then(res => res.json())
+    .then(data => console.log('Réponse du backend:', data.message))
+    .catch(err => console.error('Erreur :', err));
+}
+
+/**
+ * Gère le clic sur les boutons "Activer" et "Désactiver".
+ * @function
+ * @param {MouseEvent} event - L'événement du clic.
+ * @returns {void}
+ */
+function handleToggleClick(event) {
+  if (event.target === activate) {
+    if (opening) return;
+    updateButtonStylesOnActivate();
+    callBackendStart();
+    openPopupWindow();
+  } else if (event.target === desactivate) {
+    updateButtonStylesOnDeactivate();
+    closePopupWindow();
+    callBackendEnd();
+  }
+}
+
+/**
+ * Initialise les événements du DOM pour la popup (clics, boutons...).
+ * @function
+ * @returns {void}
+ */
+function initPopupEvents() {
+  const toggleButton = document.getElementById('toggle');
+  window.activate = document.getElementById('activate');
+  window.desactivate = document.getElementById('desactivate');
+  if (toggleButton) {
+    toggleButton.addEventListener('click', handleToggleClick);
+  }
+}
+
+// Lancement automatique à la fin du chargement de la page
+document.addEventListener('DOMContentLoaded', initPopupEvents);
+
+export {
+  updateButtonStylesOnActivate,
+  updateButtonStylesOnDeactivate,
+  handleToggleClick,
+  callBackendStart,
+  callBackendEnd,
+  openPopupWindow,
+  closePopupWindow,
+  initPopupEvents
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#callBackendEnd">callBackendEnd</a></li><li><a href="global.html#callBackendStart">callBackendStart</a></li><li><a href="global.html#checkAndAlertAvailableCameras">checkAndAlertAvailableCameras</a></li><li><a href="global.html#closePopupWindow">closePopupWindow</a></li><li><a href="global.html#createLiveReloadConnection">createLiveReloadConnection</a></li><li><a href="global.html#getVideoInputDevices">getVideoInputDevices</a></li><li><a href="global.html#handleMouseDown">handleMouseDown</a></li><li><a href="global.html#handleMouseMove">handleMouseMove</a></li><li><a href="global.html#handleMouseUp">handleMouseUp</a></li><li><a href="global.html#handleReloadMessage">handleReloadMessage</a></li><li><a href="global.html#handleToggleClick">handleToggleClick</a></li><li><a href="global.html#initOnInstalled">initOnInstalled</a></li><li><a href="global.html#initPopupEvents">initPopupEvents</a></li><li><a href="global.html#initPopupMove">initPopupMove</a></li><li><a href="global.html#initPopupVideo">initPopupVideo</a></li><li><a href="global.html#openPopupWindow">openPopupWindow</a></li><li><a href="global.html#restoreWindowSize">restoreWindowSize</a></li><li><a href="global.html#saveInitialWindowSize">saveInitialWindowSize</a></li><li><a href="global.html#startCapture">startCapture</a></li><li><a href="global.html#stopCapture">stopCapture</a></li><li><a href="global.html#updateButtonStylesOnActivate">updateButtonStylesOnActivate</a></li><li><a href="global.html#updateButtonStylesOnDeactivate">updateButtonStylesOnDeactivate</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed May 21 2025 11:36:33 GMT+0200 (heure d’été d’Europe centrale)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
