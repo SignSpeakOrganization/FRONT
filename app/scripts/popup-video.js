@@ -1,6 +1,7 @@
 'use strict';
 
 let stream = null;
+let signInterval = null;
 let initialWidth = null;
 let initialHeight = null;
 
@@ -40,13 +41,18 @@ function restoreWindowSize() {
  * @function
  * @param {HTMLVideoElement} videoElement - L'élément vidéo à libérer.
  * @param {HTMLElement} button - Le bouton de capture à réinitialiser.
+ * @param {HTMLElement} signDisplay - popup pour afficher le signe
  * @returns {void}
  */
-function stopCapture(videoElement, button) {
+function stopCapture(videoElement, button, signDisplay) {
   if (stream) {
-    stream.getTracks().forEach(track => track.stop());
-    videoElement.srcObject = null;
+    videoElement.src = null;
     stream = null;
+
+    // Stopper récupération du signe
+    clearInterval(signInterval);
+    signInterval = null;
+    signDisplay.textContent = "Déplacez-moi !";
 
     restoreWindowSize();
 
@@ -61,32 +67,50 @@ function stopCapture(videoElement, button) {
  * @function
  * @param {HTMLVideoElement} videoElement - L'élément HTML où afficher la vidéo.
  * @param {HTMLElement} button - Le bouton à mettre à jour après lancement.
+ * @param {HTMLElement} signDisplay - popup pour afficher le signe
  * @returns {Promise<void>}
  */
-async function startCapture(videoElement, button) {
-  try {
-    stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-    videoElement.srcObject = stream;
+async function startCapture(videoElement, button, signDisplay) {
+  const url = 'http://localhost:5000/video_feed';
+  videoElement.src = url;
+  button.textContent = "Fermer la capture";
+  stream = true;
 
-    button.textContent = "Fermer la capture";
-    button.classList.add("gradient");
-
-    videoElement.onloadedmetadata = () => {
-      const videoWidth = videoElement.videoWidth;
-      const videoHeight = videoElement.videoHeight;
-      const extraHeight = 100;
-
-      chrome.windows.getCurrent({}, (win) => {
-        chrome.windows.update(win.id, {
-          width: videoWidth,
-          height: videoHeight + extraHeight
-        });
+  videoElement.onload = () => {
+    chrome.windows.getCurrent({}, (win) => {
+      chrome.windows.update(win.id, {
+        width: videoElement.naturalWidth + 35,
+        height: videoElement.naturalHeight + 65
       });
-    };
-  } catch (error) {
-    console.error("Erreur d'accès caméra/micro :", error);
-    alert("Erreur : " + error.message);
-    stream = null;
+    });
+  }
+
+  button.classList.add("gradient");
+
+  signInterval = setInterval(() => {
+    fetch('http://localhost:5000/sign')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.hand_sign) {
+          signDisplay.textContent = data.hand_sign;
+        } else {
+          signDisplay.textContent = "Déplacez-moi !";
+        }
+      })
+      .catch((err) => {
+        signDisplay.textContent = "Erreur de récupération";
+        console.error("Erreur fetch /sign :", err);
+      });
+  }, 100);
+}
+
+async function requestCameraPermission() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    stream.getTracks().forEach(track => track.stop());
+    console.log("Autorisation caméra obtenue.");
+  } catch (err) {
+    console.error("Autorisation caméra refusée :", err);
   }
 }
 
@@ -98,15 +122,17 @@ async function startCapture(videoElement, button) {
 function initPopupVideo() {
   const startCaptureButton = document.getElementById("startCapture");
   const videoElement = document.getElementById("videoElement");
-  if (!startCaptureButton || !videoElement) return;
+  const signDisplay = document.getElementById("displaySign");
+  if (!startCaptureButton || !videoElement || !signDisplay) return;
 
   saveInitialWindowSize();
 
   startCaptureButton.addEventListener("click", async () => {
     if (stream) {
-      stopCapture(videoElement, startCaptureButton);
+      stopCapture(videoElement, startCaptureButton, signDisplay);
     } else {
-      await startCapture(videoElement, startCaptureButton);
+      await requestCameraPermission();
+      await startCapture(videoElement, startCaptureButton, signDisplay);
     }
   });
 }
