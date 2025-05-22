@@ -5,7 +5,7 @@
   "source": {
     "include": ["app/scripts"],
     "includePattern": ".js$",
-    "excludePattern": "(test|node_modules)"
+    "excludePattern": "(tests|node_modules)"
   },
   "plugins": [],
   "templates": {

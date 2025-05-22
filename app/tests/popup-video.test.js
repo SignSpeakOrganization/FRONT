@@ -7,7 +7,8 @@ import {
   restoreWindowSize,
   stopCapture,
   startCapture,
-  initPopupVideo
+  initPopupVideo,
+  requestCameraPermission
 } from '../scripts/popup-video';
 
 let mockWindow = { id: 1, width: 800, height: 600 };
@@ -16,6 +17,7 @@ beforeEach(() => {
   document.body.innerHTML = `
     <button id="startCapture">Démarrer Capture</button>
     <video id="videoElement" autoplay playsinline></video>
+    <div id="displaySign">Déplacez-moi !</div>
   `;
 
   global.chrome = {
@@ -27,6 +29,11 @@ beforeEach(() => {
 
   global.alert = jest.fn();
   global.console.error = jest.fn();
+  jest.useFakeTimers(); // Pour setInterval
+});
+
+afterEach(() => {
+  jest.clearAllTimers();
 });
 
 describe('saveInitialWindowSize', () => {
@@ -52,82 +59,57 @@ describe('stopCapture', () => {
   it('should stop the stream and reset the interface', () => {
     const video = document.getElementById('videoElement');
     const button = document.getElementById('startCapture');
+    const signDisplay = document.getElementById('displaySign');
 
-    const mockTrack = { stop: jest.fn() };
-    const mockStream = { getTracks: () => [mockTrack] };
+    // Simule une capture en cours
+    video.src = 'http://localhost:5000/video_feed';
+    window.stream = true;
 
-    //simulation d'un stream déjà actif
-    video.srcObject = mockStream;
+    stopCapture(video, button, signDisplay);
 
-    global.navigator.mediaDevices = {
-      getUserMedia: jest.fn(() => Promise.resolve(mockStream))
-    };
-
-    return startCapture(video, button).then(() => {
-      stopCapture(video, button);
-
-      expect(mockTrack.stop).toHaveBeenCalled();
-      expect(video.srcObject).toBe(null);
-      expect(button.textContent).toBe("Démarrer Capture");
-      expect(button.classList.contains('gradient')).toBe(false);
-    });
+    expect(button.textContent).toBe("Démarrer Capture");
+    expect(button.classList.contains('gradient')).toBe(false);
+    expect(signDisplay.textContent).toBe("Déplacez-moi !");
   });
 });
 
 describe('startCapture', () => {
-  beforeEach(() => {
-    global.navigator.mediaDevices = {
-      getUserMedia: jest.fn(() =>
-        Promise.resolve({
-          getTracks: () => [],
-        })
-      )
-    };
-  });
-
-  it('should start video/audio capture and update the interface', async () => {
+  it('should start capture and update UI', async () => {
     const video = document.getElementById('videoElement');
     const button = document.getElementById('startCapture');
+    const signDisplay = document.getElementById('displaySign');
 
-    // Mock du flux média
-    const mockStream = {
-      getTracks: () => []
-    };
-    navigator.mediaDevices.getUserMedia.mockResolvedValueOnce(mockStream);
+    Object.defineProperty(video, 'naturalWidth', { configurable: true, value: 640 });
+    Object.defineProperty(video, 'naturalHeight', { configurable: true, value: 480 });
 
-    // Mock des dimensions vidéo via defineProperty
-    Object.defineProperty(video, 'videoWidth', { configurable: true, value: 640 });
-    Object.defineProperty(video, 'videoHeight', { configurable: true, value: 480 });
+    await startCapture(video, button, signDisplay);
 
-    await startCapture(video, button);
+    // Simule le chargement
+    if (typeof video.onload === 'function') video.onload();
 
-    // Déclenche manuellement l’événement onloadedmetadata
-    video.onloadedmetadata();
-
-    expect(navigator.mediaDevices.getUserMedia).toHaveBeenCalledWith({
-      video: true,
-      audio: true
-    });
-
+    expect(video.src).toBe('http://localhost:5000/video_feed');
     expect(button.textContent).toBe("Fermer la capture");
     expect(button.classList.contains('gradient')).toBe(true);
     expect(chrome.windows.update).toHaveBeenCalledWith(expect.any(Number), {
-      width: 640,
-      height: 580 // 480 + 100 extraHeight
+      width: 675,
+      height: 545
     });
   });
+});
 
+describe('requestCameraPermission', () => {
+  it('should alert on camera permission error', async () => {
+    global.console.error = jest.fn();
+    navigator.mediaDevices = {
+      getUserMedia: jest.fn().mockRejectedValueOnce(new Error("Refus de permission"))
+    };
 
-  it('should display an alert in case of an error', async () => {
-    navigator.mediaDevices.getUserMedia.mockRejectedValueOnce(new Error("Refus de permission"));
+    await requestCameraPermission();
 
-    const video = document.getElementById('videoElement');
-    const button = document.getElementById('startCapture');
-
-    await startCapture(video, button);
-
-    expect(alert).toHaveBeenCalledWith("Erreur : Refus de permission");
-    expect(console.error).toHaveBeenCalled();
+    expect(console.error).toHaveBeenCalledWith(
+      "Autorisation caméra refusée :",
+      expect.any(Error)
+    );
   });
 });
 
@@ -145,6 +127,7 @@ describe('initPopupVideo', () => {
   it('does not crash if the elements are missing', () => {
     document.getElementById('startCapture').remove();
     document.getElementById('videoElement').remove();
+    document.getElementById('displaySign').remove();
 
     expect(() => initPopupVideo()).not.toThrow();
   });

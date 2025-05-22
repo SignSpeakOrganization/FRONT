@@ -147,5 +147,6 @@ export {
   restoreWindowSize,
   stopCapture,
   startCapture,
-  initPopupVideo
+  initPopupVideo,
+  requestCameraPermission
 };
