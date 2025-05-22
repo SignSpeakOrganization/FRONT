@@ -89,6 +89,32 @@ function callBackendEnd() {
     .catch(err => console.error('Erreur :', err));
 }
 
+function fetchHandSign() {
+  fetch('/sign')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Erreur lors de la requête');
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log("Lettre détectée :", data.hand_sign);
+      const displaySignElement = document.getElementById('displaySign');
+      if (displaySignElement) {
+        if (data.hand_sign != '') {
+          displaySignElement.textContent = `${data.hand_sign}`;
+        }
+        else {
+          displaySignElement.textContent = "Déplacez-moi !";
+        }
+      }
+    })
+    .catch(error => console.error("Erreur :", error));
+}
+
+// Appeler la fonction toutes les 2 secondes
+setInterval(fetchHandSign, 2000);
+
 /**
  * Gère le clic sur les boutons "Activer" et "Désactiver".
  * @function
