@@ -44,7 +44,11 @@
         "popup.html",
         "parameters/option.html",
         "parameters/menu/menu.html",
-        "parameters/general/general.html"
+        "parameters/general/general.html",
+        "parameters/retranscription/retranscription.html",
+        "parameters/accessibilite/accessibilite.html",
+        "parameters/compatibilite/compatibilite.html",
+        "parameters/contact/contact.html"
       ],
       "matches": ["<all_urls>"]
     }
