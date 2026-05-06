@@ -1,9 +1,17 @@
+import {
+  callBackendStart,
+  callBackendEnd,
+  openPopupWindow,
+  closePopupWindow,
+} from "../scripts/popup.js";
+import { initRetranscriptionPage } from "./retranscription/retranscription.js";
+
 const PAGES = {
   general: "general/general.html",
   retranscription: "retranscription/retranscription.html",
   accessibilite: "accessibilite/accessibilite.html",
   compatibilite: "compatibilite/compatibilite.html",
-  contact: "contact/contact.html"
+  contact: "contact/contact.html",
 };
 
 const activateMenuItem = (pageKey) => {
@@ -27,7 +35,21 @@ const initGeneralPage = () => {
   });
 
   signDetection.addEventListener("change", () => {
-    chrome.storage.sync.set({ signDetection: signDetection.checked });
+    const value = signDetection.checked;
+
+    chrome.storage.sync.set({ signDetection: value });
+
+    if (value) {
+      console.log("Checkbox -> ACTIVER");
+
+      callBackendStart();
+      openPopupWindow();
+    } else {
+      console.log("Checkbox -> DESACTIVER");
+
+      closePopupWindow();
+      callBackendEnd();
+    }
   });
 
   languageSelect.addEventListener("change", () => {
@@ -55,6 +77,10 @@ const loadPage = (pageKey) => {
 
       if (pageKey === "general") {
         initGeneralPage();
+      }
+
+      if (pageKey === "retranscription") {
+        initRetranscriptionPage();
       }
     })
     .catch((err) => console.error("Erreur de chargement de page :", err));

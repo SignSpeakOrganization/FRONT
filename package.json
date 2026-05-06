@@ -57,6 +57,7 @@
     }
   },
   "dependencies": {
+    "pip": "^0.0.1",
     "sign-speak": "file:"
   },
   "version": "1.0.0",

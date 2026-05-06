@@ -2,7 +2,98 @@
   <h1>Contactez-nous</h1>
 
   <section class="section">
-    <h2>Support</h2>
-    <p>Ajoutez ici vos informations de contact et de support.</p>
+    <h2>Support par email</h2>
+    <p class="support-info">
+      Si vous n’avez pas réussi à résoudre votre problème à l’aide de la FAQ,
+      que vous souhaitez signaler un bug ou que vous souhaitez nous suggérer une
+      amélioration, remplissez le formulaire ci-dessous, nous vous répondrons au
+      plus vite !
+    </p>
+    <form id="contact-form" class="contact-form">
+      <input
+        type="text"
+        id="name"
+        name="name"
+        placeholder="Votre nom (facultatif)"
+        class="input-field"
+      />
+      <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="Votre email"
+        required
+        class="input-field"
+      />
+      <input
+        type="text"
+        id="object"
+        name="object"
+        placeholder="Objet de la demande"
+        required
+        class="input-field"
+      />
+      <label for="attachment" class="file-upload">
+        Ajouter une pièce jointe
+      </label>
+
+      <input type="file" id="attachment" name="attachment" />
+
+      <span id="file-name">Aucun fichier sélectionné</span>
+      <textarea
+        id="message"
+        name="message"
+        placeholder="Décrivez le bug..."
+        required
+        class="textarea-field"
+      ></textarea>
+      <button type="submit" class="file-upload">Envoyer</button>
+    </form>
+  </section>
+
+  <section class="section">
+    <h2>Suivez nous sur les réseaux</h2>
+    <p class="support-info">Restez informé des nouveautés !</p>
+
+    <a
+      href="https://www.linkedin.com"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <img
+        src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg"
+        alt="LinkedIn"
+        width="70"
+      />
+    </a>
+  </section>
+
+  <section class="section">
+    <h2>FAQ et aide</h2>
+    <p class="support-info">
+      Trouvez des réponses et apprenez à utiliser l’extension facilement !
+    </p>
+
+    <p>
+      <a href="/faq">FAQ</a>
+    </p>
+
+    <p>
+      <a href="/tutorial">Tutoriel d’utilisation</a>
+    </p>
+  </section>
+
+  <section class="section">
+    <h2>Mentions légales et politique de confidentialité</h2>
+
+    <p>
+      <a href="/mentions-legales">Mentions légales</a>
+    </p>
+
+    <p>
+      <a href="/politique-confidentialite">
+        Politique de confidentialité
+      </a>
+    </p>
   </section>
 </main>

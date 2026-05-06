@@ -2,7 +2,97 @@
   <h1>Retranscription et traduction</h1>
 
   <section class="section">
-    <h2>État</h2>
-    <p>Paramètres de retranscription et de traduction à configurer.</p>
+    <h2>Retranscription orale</h2>
+    <label class="checkbox-container">
+      Activer la retranscription orale
+      <input id="enable-oral-transcription" class="checkbox" type="checkbox" />
+    </label>
+    <!-- Afficher le reste de la section seulement si la retranscription orale est activée -->
+
+    <div id="oral-transcription-options" class="hidden">
+      <h2>Volume de la voix</h2>
+      <select id="voice-level" class="select">
+        <option value="low">Bas</option>
+        <option value="medium">Moyen</option>
+        <option value="high">Haut</option>
+    </select>
+    
+    <h2> Choisir une voix</h2>
+    <select id="voice-select" class="select">
+      <option value="male">Masculine</option>
+      <option value="female">Féminine</option>
+    </select>
+    </div>
+  </section>
+
+  <div class="separator"></div>
+
+  <section class="section">
+    <h2>Sous-titres</h2>
+    <label class="checkbox-container">
+      Activer les sous-titres
+      <input id="enable-subtitles" class="checkbox" type="checkbox" />
+    </label>
+    <!-- Afficher le reste de la section seulement si les sous-titres sont activés -->
+
+    <div id="subtitle-options" class="hidden">
+    <h2>Taille du texte</h2>
+    <select id="subtitle-size" class="select">
+      <option value="small">Petit</option>
+      <option value="medium">Moyen</option>
+      <option value="large">Grand</option>
+    </select>
+
+    <h2>Couleur du texte des sous-titres</h2>
+    <select id="subtitle-color" class="select">
+      <option value="white">Blanc</option>
+      <option value="black">Noir</option>
+    </select>
+
+    <h2>Couleur de fond des sous-titres</h2>
+    <select id="subtitle-background-color" class="select">
+      <option value="transparent">Transparent</option>
+      <option value="black">Noir</option>
+      <option value="white">Blanc</option>
+    </select>
+
+    <h2>Fond des sous-titres</h2>
+    <select id="subtitle-background" class="select">
+      <option value="transparent">Transparent</option>
+      <option value="semi-transparent">Semi-transparent</option>
+      <option value="solid">Solide</option>
+    </select>
+    </div>
+  </section>
+
+  <div class="separator"></div>
+  
+  <section class="section">
+    <h2>Bulle de traduction en LSF</h2>
+    <label class="checkbox-container">
+      Activer la bulle de traduction en LSF
+      <input id="enable-lsf-bubble" class="checkbox" type="checkbox" />
+    </label>
+    <!-- Afficher le reste de la section seulement si la bulle de traduction en LSF est activée -->
+
+    <div id="lsf-bubble-options" class="hidden">
+      <h2>Position sur l'écran</h2>
+      <select id="lsf-bubble-position" class="select">
+        <option value="top-left">Haut gauche</option>
+        <option value="top-right">Haut droite</option>
+        <option value="bottom-left">Bas gauche</option>
+        <option value="bottom-right">Bas droite</option>
+      </select>
+
+      <h2>Taille de la bulle</h2>
+      <select id="lsf-bubble-size" class="select">
+        <option value="small">Petit</option>
+        <option value="medium">Moyen</option>
+        <option value="large">Grand</option>
+      </select>
+
+      <h2>Opacité</h2>
+      <input type="number" id="lsf-bubble-opacity" class="input" min="0" max="100" step="1" value="100">
+
   </section>
 </main>
