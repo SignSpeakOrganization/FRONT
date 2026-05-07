@@ -1,13 +1,10 @@
 'use strict';
 
+import { api } from './api.js';
+
 let popupWindowId = null;
 let opening = false;
 
-/**
- * Applique les styles CSS d'activation sur les boutons.
- * @function
- * @returns {void}
- */
 function updateButtonStylesOnActivate() {
   activate.classList.add('gradient');
   activate.classList.remove('inactive', 'active');
@@ -15,11 +12,6 @@ function updateButtonStylesOnActivate() {
   desactivate.classList.remove('gradient', 'inactive');
 }
 
-/**
- * Applique les styles CSS de désactivation sur les boutons.
- * @function
- * @returns {void}
- */
 function updateButtonStylesOnDeactivate() {
   desactivate.classList.add('inactive');
   desactivate.classList.remove('gradient', 'active');
@@ -27,18 +19,16 @@ function updateButtonStylesOnDeactivate() {
   activate.classList.remove('gradient', 'inactive');
 }
 
-/**
- * Ouvre une nouvelle fenêtre popup de l’extension.
- * @function
- * @param {Function} [callback] - Fonction appelée après l’ouverture.
- * @returns {void}
- */
 function openPopupWindow(callback) {
+  if (popupWindowId !== null) {
+    if (callback) callback();
+    return;
+  }
   chrome.windows.create({
-    url: chrome.runtime.getURL("popup.html"),
-    type: "popup",
-    width: 300,
-    height: 250,
+    url: chrome.runtime.getURL('popup.html'),
+    type: 'popup',
+    width: 360,
+    height: 440,
     top: 100,
     left: 100,
     focused: true
@@ -49,12 +39,6 @@ function openPopupWindow(callback) {
   });
 }
 
-/**
- * Ferme la fenêtre popup ouverte, si elle existe.
- * @function
- * @param {Function} [callback] - Fonction appelée après la fermeture.
- * @returns {void}
- */
 function closePopupWindow(callback) {
   if (popupWindowId !== null) {
     chrome.windows.remove(popupWindowId, () => {
@@ -62,57 +46,38 @@ function closePopupWindow(callback) {
       opening = false;
       if (callback) callback();
     });
+  } else if (callback) {
+    callback();
   }
 }
 
-/**
- * Effectue un appel HTTP pour démarrer le backend (serveur Python).
- * @function
- * @returns {Promise<void>}
- */
 function callBackendStart() {
-  return fetch('http://localhost:5000/start', { method: 'GET' })
-    .then(res => res.json())
-    .then(data => console.log('Réponse du backend:', data.message))
-    .catch(err => console.error('Erreur :', err));
+  return api.start()
+    .then((data) => console.log('Backend /start:', data))
+    .catch((err) => console.error('Backend /start erreur :', err));
 }
 
-/**
- * Effectue un appel HTTP pour arrêter le backend.
- * @function
- * @returns {Promise<void>}
- */
 function callBackendEnd() {
-  return fetch('http://localhost:5000/end', { method: 'GET' })
-    .then(res => res.json())
-    .then(data => console.log('Réponse du backend:', data.message))
-    .catch(err => console.error('Erreur :', err));
+  return api.end()
+    .then((data) => console.log('Backend /end:', data))
+    .catch((err) => console.error('Backend /end erreur :', err));
 }
 
-/**
- * Gère le clic sur les boutons "Activer" et "Désactiver".
- * @function
- * @param {MouseEvent} event - L'événement du clic.
- * @returns {void}
- */
 function handleToggleClick(event) {
   if (event.target === activate) {
     if (opening) return;
     updateButtonStylesOnActivate();
     callBackendStart();
     openPopupWindow();
+    chrome.storage.sync.set({ signDetection: true });
   } else if (event.target === desactivate) {
     updateButtonStylesOnDeactivate();
     closePopupWindow();
     callBackendEnd();
+    chrome.storage.sync.set({ signDetection: false });
   }
 }
 
-/**
- * Initialise les événements du DOM pour la popup (clics, boutons...).
- * @function
- * @returns {void}
- */
 function initPopupEvents() {
   const toggleButton = document.getElementById('toggle');
   window.activate = document.getElementById('activate');
@@ -120,9 +85,17 @@ function initPopupEvents() {
   if (toggleButton) {
     toggleButton.addEventListener('click', handleToggleClick);
   }
+
+  if (chrome?.windows?.onRemoved) {
+    chrome.windows.onRemoved.addListener((windowId) => {
+      if (windowId === popupWindowId) {
+        popupWindowId = null;
+        opening = false;
+      }
+    });
+  }
 }
 
-// Lancement automatique à la fin du chargement de la page
 document.addEventListener('DOMContentLoaded', initPopupEvents);
 
 export {

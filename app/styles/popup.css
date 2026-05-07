@@ -1,37 +1,116 @@
 body {
   margin: 0;
-  font-family: sans-serif;
+  font-family: Roboto, Arial, sans-serif;
+  background: #fbfbfb;
+  user-select: none;
 }
 
-.draggable {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
+.draggable-window {
+  width: 320px;
+  border-radius: 12px;
   position: absolute;
-  top: 45px;
-  left: 50px;
-  padding: 4px; /* épaisseur de la bordure */
-  background: 
-    linear-gradient(white, white) padding-box,       /* fond uni intérieur */
-    linear-gradient(135deg, #4b6cb7, #182848) border-box; /* dégradé bordure */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  top: 12px;
+  left: 12px;
+  padding: 4px;
+  background:
+    linear-gradient(white, white) padding-box,
+    linear-gradient(135deg, #27c8db, #3a6fa3 50%, #543687) border-box;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   border: 4px solid transparent;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+  flex-direction: column;
   cursor: move;
   box-sizing: border-box;
 }
 
-.draggable h1 {
-  font-size: 16px;
-  margin: 0;
-  padding: 10px;
+.popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px 4px;
 }
 
-h1 {
-  margin: 0;
-  font-size: 18px;
+.popup-title {
+  font-weight: 600;
+  font-size: 14px;
+  background: linear-gradient(45deg, #27c8db, #543687);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.backend-state {
+  font-size: 14px;
+  color: #aaa;
+}
+
+.popup-video-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: #1a1a1a;
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 0 0 8px;
+}
+
+#videoFeed {
+  display: none;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ddd;
+  font-size: 13px;
   text-align: center;
+  padding: 8px;
+}
+
+.popup-info {
+  padding: 0 12px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.popup-info p {
+  margin: 4px 0;
+}
+
+.prediction-label,
+.mode-label,
+.phrase-label {
+  color: #555;
+  margin-right: 4px;
+}
+
+#prediction {
+  color: #215587;
+}
+
+.popup-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px 12px 10px;
+}
+
+.popup-actions button {
+  font-family: inherit;
+  font-size: 12px;
+  padding: 6px 10px;
+  border: 1px solid #235b8c;
+  background: white;
+  color: #235b8c;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.popup-actions button:hover {
+  background: #B5CFE9;
 }

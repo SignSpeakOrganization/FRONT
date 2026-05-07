@@ -302,3 +302,77 @@ input:not([type="file"]) {
   color: #999;
   font-size: 14px;
 }
+
+.backend-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #333;
+  margin-top: 10px;
+}
+
+.backend-meta {
+  font-size: 13px;
+  color: #555;
+  margin: 4px 0 12px;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #bbb;
+  flex: 0 0 10px;
+}
+
+.status-dot.status-ok {
+  background: #2ecc71;
+  box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.2);
+}
+
+.status-dot.status-ko {
+  background: #e74c3c;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
+}
+
+.live-row {
+  font-size: 15px;
+  margin: 6px 0;
+}
+
+#live-prediction {
+  color: var(--secondary-blue);
+}
+
+.stt-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0;
+}
+
+.stt-status {
+  font-size: 13px;
+  color: #555;
+}
+
+.stt-result {
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+#stt-text {
+  font-weight: 500;
+}
+
+textarea.textarea-field {
+  min-height: 110px;
+  resize: vertical;
+}
+
+body.bw-mode {
+  filter: grayscale(1);
+}
+

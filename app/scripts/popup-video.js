@@ -1,125 +1,133 @@
 'use strict';
 
-let stream = null;
-let initialWidth = null;
-let initialHeight = null;
+import { api } from './api.js';
 
-/**
- * Sauvegarde la taille actuelle de la fenêtre Chrome.
- * @function
- * @returns {Promise<void>}
- */
-function saveInitialWindowSize() {
-  return new Promise((resolve) => {
-    chrome.windows.getCurrent({}, (win) => {
-      initialWidth = win.width;
-      initialHeight = win.height;
-      resolve();
-    });
-  });
+let pollHandle = null;
+const POLL_INTERVAL_MS = 500;
+
+function setBackendState(stateChar, title) {
+  const el = document.getElementById('backend-state');
+  if (!el) return;
+  el.textContent = stateChar;
+  el.title = title || '';
 }
 
-/**
- * Restaure la fenêtre Chrome à sa taille initialement enregistrée.
- * @function
- * @returns {void}
- */
-function restoreWindowSize() {
-  if (initialWidth && initialHeight) {
-    chrome.windows.getCurrent({}, (win) => {
-      chrome.windows.update(win.id, {
-        width: initialWidth,
-        height: initialHeight
-      });
-    });
+function showVideoFeed() {
+  const img = document.getElementById('videoFeed');
+  const placeholder = document.getElementById('videoPlaceholder');
+  if (!img) return;
+
+  img.src = `${api.videoFeedUrl}?ts=${Date.now()}`;
+  img.style.display = 'block';
+  if (placeholder) placeholder.style.display = 'none';
+
+  img.onerror = () => {
+    img.style.display = 'none';
+    if (placeholder) {
+      placeholder.style.display = 'flex';
+      placeholder.textContent = 'Backend indisponible';
+    }
+    setBackendState('✕', 'Backend indisponible');
+  };
+}
+
+function updateUiFromStatus(data) {
+  if (!data) return;
+  const predEl = document.getElementById('prediction');
+  const modeEl = document.getElementById('mode');
+  const phraseEl = document.getElementById('phrase');
+
+  if (predEl) predEl.textContent = data.prediction || '…';
+  if (modeEl) modeEl.textContent = data.mode || '…';
+  if (phraseEl) phraseEl.textContent = data.text || '';
+
+  if (data.success !== false && data.camera_running) {
+    setBackendState('●', 'Backend connecté');
   }
 }
 
-/**
- * Arrête la capture vidéo et audio en cours.
- * @function
- * @param {HTMLVideoElement} videoElement - L'élément vidéo à libérer.
- * @param {HTMLElement} button - Le bouton de capture à réinitialiser.
- * @returns {void}
- */
-function stopCapture(videoElement, button) {
-  if (stream) {
-    stream.getTracks().forEach(track => track.stop());
-    videoElement.srcObject = null;
-    stream = null;
-
-    restoreWindowSize();
-
-    button.textContent = "Démarrer Capture";
-    button.classList.remove("gradient");
-  }
-}
-
-/**
- * Démarre la capture vidéo et audio depuis la webcam et le micro.
- * @async
- * @function
- * @param {HTMLVideoElement} videoElement - L'élément HTML où afficher la vidéo.
- * @param {HTMLElement} button - Le bouton à mettre à jour après lancement.
- * @returns {Promise<void>}
- */
-async function startCapture(videoElement, button) {
+async function pollBackend() {
   try {
-    stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-    videoElement.srcObject = stream;
-
-    button.textContent = "Fermer la capture";
-    button.classList.add("gradient");
-
-    videoElement.onloadedmetadata = () => {
-      const videoWidth = videoElement.videoWidth;
-      const videoHeight = videoElement.videoHeight;
-      const extraHeight = 100;
-
-      chrome.windows.getCurrent({}, (win) => {
-        chrome.windows.update(win.id, {
-          width: videoWidth,
-          height: videoHeight + extraHeight
-        });
-      });
-    };
-  } catch (error) {
-    console.error("Erreur d'accès caméra/micro :", error);
-    alert("Erreur : " + error.message);
-    stream = null;
+    const status = await api.status();
+    updateUiFromStatus(status);
+  } catch (err) {
+    setBackendState('✕', `Erreur backend : ${err.message}`);
   }
 }
 
-/**
- * Initialise le bouton de capture et l'élément vidéo au chargement de la popup.
- * @function
- * @returns {void}
- */
-function initPopupVideo() {
-  const startCaptureButton = document.getElementById("startCapture");
-  const videoElement = document.getElementById("videoElement");
-  if (!startCaptureButton || !videoElement) return;
+function startPolling() {
+  if (pollHandle !== null) return;
+  pollBackend();
+  pollHandle = setInterval(pollBackend, POLL_INTERVAL_MS);
+}
 
-  saveInitialWindowSize();
+function stopPolling() {
+  if (pollHandle !== null) {
+    clearInterval(pollHandle);
+    pollHandle = null;
+  }
+}
 
-  startCaptureButton.addEventListener("click", async () => {
-    if (stream) {
-      stopCapture(videoElement, startCaptureButton);
-    } else {
-      await startCapture(videoElement, startCaptureButton);
+async function ensureBackendStarted() {
+  try {
+    const health = await api.health();
+    if (!health || !health.success) {
+      setBackendState('✕', 'Backend KO');
+      return false;
+    }
+  } catch (err) {
+    setBackendState('✕', 'Backend hors ligne');
+    return false;
+  }
+
+  try {
+    await api.start();
+  } catch (err) {
+    console.warn('start ignoré :', err);
+  }
+  return true;
+}
+
+async function bindClearPhrase() {
+  const btn = document.getElementById('clearPhrase');
+  if (!btn) return;
+  btn.addEventListener('click', async () => {
+    try {
+      await api.clearPhrase();
+      const phraseEl = document.getElementById('phrase');
+      if (phraseEl) phraseEl.textContent = '';
+    } catch (err) {
+      console.error('clearPhrase :', err);
     }
   });
 }
 
-/**
- * Lance l'initialisation une fois le DOM chargé.
- */
-document.addEventListener("DOMContentLoaded", initPopupVideo);
+async function initPopupVideo() {
+  const videoFeed = document.getElementById('videoFeed');
+  if (!videoFeed) return;
+
+  setBackendState('⏳', 'Connexion au backend…');
+
+  const ok = await ensureBackendStarted();
+  if (!ok) return;
+
+  showVideoFeed();
+  bindClearPhrase();
+  startPolling();
+
+  window.addEventListener('beforeunload', () => {
+    stopPolling();
+    api.end().catch(() => {});
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initPopupVideo);
 
 export {
-  saveInitialWindowSize,
-  restoreWindowSize,
-  stopCapture,
-  startCapture,
-  initPopupVideo
+  ensureBackendStarted,
+  showVideoFeed,
+  pollBackend,
+  startPolling,
+  stopPolling,
+  initPopupVideo,
 };
