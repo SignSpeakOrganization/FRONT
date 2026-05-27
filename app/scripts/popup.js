@@ -27,8 +27,8 @@ function openPopupWindow(callback) {
   chrome.windows.create({
     url: chrome.runtime.getURL('popup.html'),
     type: 'popup',
-    width: 360,
-    height: 440,
+    width: 560,
+    height: 500,
     top: 100,
     left: 100,
     focused: true

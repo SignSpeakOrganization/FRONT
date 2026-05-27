@@ -102,7 +102,27 @@ async function bindClearPhrase() {
   });
 }
 
+function applyBwMode(enabled) {
+  document.body.classList.toggle('bw-mode', Boolean(enabled));
+}
+
+function initBwModeSync() {
+  if (!chrome?.storage?.sync) return;
+  chrome.storage.sync.get(['enable-bw-mode'], (data) => {
+    applyBwMode(data['enable-bw-mode']);
+  });
+  if (chrome.storage.onChanged) {
+    chrome.storage.onChanged.addListener((changes, area) => {
+      if (area === 'sync' && changes['enable-bw-mode']) {
+        applyBwMode(changes['enable-bw-mode'].newValue);
+      }
+    });
+  }
+}
+
 async function initPopupVideo() {
+  initBwModeSync();
+
   const videoFeed = document.getElementById('videoFeed');
   if (!videoFeed) return;
 
