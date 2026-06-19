@@ -261,6 +261,7 @@ img {
   object-fit: cover;
 }
 .platforms-logos img[alt="Logo Microsoft Teams"] {
+  flex: 0 0 auto;
   width: 75px;
 }
 
